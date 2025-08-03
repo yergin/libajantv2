@@ -50,8 +50,23 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
             set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum macOS deployment version" FORCE)
         endif()
     endif()
+    # Ensure CMAKE_OSX_SYSROOT is set
+    if(NOT CMAKE_OSX_SYSROOT OR CMAKE_OSX_SYSROOT STREQUAL "")
+        execute_process(
+            COMMAND xcrun --show-sdk-path
+            OUTPUT_VARIABLE CMAKE_OSX_SYSROOT
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            ERROR_QUIET
+        )
+        set(CMAKE_OSX_SYSROOT ${CMAKE_OSX_SYSROOT} CACHE PATH "Path to macOS SDK" FORCE)
+    endif()
+    
     # Get the macOS SDK version
-    get_filename_component(MACOS_SDK_NAME ${CMAKE_OSX_SYSROOT} NAME_WE)
+    if(CMAKE_OSX_SYSROOT)
+        get_filename_component(MACOS_SDK_NAME ${CMAKE_OSX_SYSROOT} NAME_WE)
+    else()
+        set(MACOS_SDK_NAME "MacOSX")
+    endif()
     string(REPLACE "MacOSX" "" MACOS_SDK_VERSION ${MACOS_SDK_NAME})
     string(REPLACE "." ";" MACOS_SDK_VERSION_LIST ${MACOS_SDK_VERSION})
     list(GET MACOS_SDK_VERSION_LIST 0 MACOS_SDK_VERSION_MAJOR)
