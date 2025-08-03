@@ -51,7 +51,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         endif()
     endif()
     # Get the macOS SDK version
-    get_filename_component(MACOS_SDK_NAME ${CMAKE_OSX_SYSROOT} NAME_WLE)
+    get_filename_component(MACOS_SDK_NAME ${CMAKE_OSX_SYSROOT} NAME_WE)
     string(REPLACE "MacOSX" "" MACOS_SDK_VERSION ${MACOS_SDK_NAME})
     string(REPLACE "." ";" MACOS_SDK_VERSION_LIST ${MACOS_SDK_VERSION})
     list(GET MACOS_SDK_VERSION_LIST 0 MACOS_SDK_VERSION_MAJOR)
