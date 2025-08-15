@@ -98,7 +98,8 @@ if (AJA_GIT_COMMIT_HASH_SHORT)
 else()
     message(STATUS "AJA_GIT_COMMIT_HASH_SHORT not set!")
 endif()
-if(EXISTS "${CMAKE_SOURCE_DIR}/.git/HEAD")
+# Only track git changes if not disabled (for faster development builds)
+if(NOT DISABLE_GIT_VERSION_TRACKING AND EXISTS "${CMAKE_SOURCE_DIR}/.git/HEAD")
     # Use configure_file to force a re-configure if the HEAD file changes. That means changing branch.
     # The re-configure will pick up a new git commit hash above, if it exists and is valid.
     # This will be slightly redundant if BUILD_VERSION_HASH is specified but that is not a case we expect to care about.
