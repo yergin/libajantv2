@@ -21,18 +21,23 @@ include(CMakeOptions)
 include(Defines)
 include(Version)
 
+option(AJANTV2_BUILD_OPENSOURCE    "Build libajantv2 as open-source (MIT license)?"   ON)
+option(AJANTV2_BUILD_SHARED        "Build libajantv2 shared libraries?"               OFF)
+option(AJANTV2_STATIC_RUNTIME      "Use static C runtime library (/MT, /MTd)?"        ON)
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	if (DEFINED AJA_MSVC_RUNTIME_LIBRARY)
 		set(CMAKE_MSVC_RUNTIME_LIBRARY "${AJA_MSVC_RUNTIME_LIBRARY}" PARENT_SCOPE)
 	endif()
 
     if(NOT CMAKE_MSVC_RUNTIME_LIBRARY)
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded") 
+        if(AJANTV2_STATIC_RUNTIME)
+            set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+        else()
+            set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
+        endif()
     endif()
 endif()
-
-option(AJANTV2_BUILD_OPENSOURCE    "Build libajantv2 as open-source (MIT license)?"   ON)
-option(AJANTV2_BUILD_SHARED        "Build libajantv2 shared libraries?"               OFF)
 
 option(AJANTV2_DISABLE_DEMOS       "Disable building libajantv2 demo apps?"           OFF)
 option(AJANTV2_DISABLE_DRIVER      "Disable building libajantv2 driver (Linux-only)?" OFF)
